@@ -9,9 +9,9 @@ mkdir -pv /var/lattice/setup
 
 lattice_common_build_path=/tmp/lattice-build/common
 
-cp -v $lattice_common_build_path/health_check /var/lattice
+cp $lattice_common_build_path/health_check /var/lattice
 
-cp -v $lattice_common_build_path/LATTICE_VERSION /var/lattice
+cp $lattice_common_build_path/LATTICE_VERSION /var/lattice
 
 ## log rotation ##
 cp -v $lattice_common_build_path/system-config/lattice.logrotate.txt /etc/logrotate.d/lattice
