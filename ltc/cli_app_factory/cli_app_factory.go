@@ -24,6 +24,7 @@ import (
 	"github.com/pivotal-golang/lager"
 
 	app_examiner_command_factory "github.com/cloudfoundry-incubator/lattice/ltc/app_examiner/command_factory"
+	"github.com/cloudfoundry-incubator/lattice/ltc/app_examiner/command_factory/graphical_visualizer"
 	app_runner_command_factory "github.com/cloudfoundry-incubator/lattice/ltc/app_runner/command_factory"
 	config_command_factory "github.com/cloudfoundry-incubator/lattice/ltc/config/command_factory"
 	integration_test_command_factory "github.com/cloudfoundry-incubator/lattice/ltc/integration_test/command_factory"
@@ -92,7 +93,8 @@ func cliCommands(ltcConfigRoot string, exitHandler exit_handler.ExitHandler, con
 	tailedLogsOutputter := console_tailed_logs_outputter.NewConsoleTailedLogsOutputter(ui, logReader)
 
 	appExaminer := app_examiner.New(receptorClient, app_examiner.NewNoaaConsumer(noaaConsumer))
-	appExaminerCommandFactory := app_examiner_command_factory.NewAppExaminerCommandFactory(appExaminer, ui, clock, exitHandler)
+	graphicalVisualizer := graphical_visualizer.New(appExaminer, ui, clock)
+	appExaminerCommandFactory := app_examiner_command_factory.NewAppExaminerCommandFactory(appExaminer, ui, clock, exitHandler, graphicalVisualizer)
 
 	appRunnerCommandFactoryConfig := app_runner_command_factory.AppRunnerCommandFactoryConfig{
 		AppRunner:             appRunner,
