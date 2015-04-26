@@ -216,8 +216,42 @@ var _ = Describe("CommandFactory", func() {
 				exitHandler.Exit(exit_codes.SigInt)
 
 				Eventually(closeChan).Should(BeClosed())
-				Expect(outputBuffer).Should(test_helpers.Say(cursor.Show()))
+				Expect(outputBuffer).To(test_helpers.Say(cursor.Show()))
 			})
+		})
+
+		Context("when the graphical flag is passed", func() {
+
+			It("successfully visualizes at default rate and exits", func() {
+				graphicalVisualizer.PrintDistributionChartReturns(nil)
+
+				closeChan := test_helpers.AsyncExecuteCommandWithArgs(visualizeCommand, []string{"--graphical"})
+
+				Eventually(closeChan).Should(BeClosed())
+				Expect(graphicalVisualizer.PrintDistributionChartCallCount()).To(Equal(1))
+				Expect(graphicalVisualizer.PrintDistributionChartArgsForCall(0)).To(BeZero())
+			})
+
+			It("successfully visualizes at default rate and exits", func() {
+				graphicalVisualizer.PrintDistributionChartReturns(nil)
+
+				closeChan := test_helpers.AsyncExecuteCommandWithArgs(visualizeCommand, []string{"--graphical", "--rate=1.42s"})
+
+				Eventually(closeChan).Should(BeClosed())
+				Expect(graphicalVisualizer.PrintDistributionChartCallCount()).To(Equal(1))
+				expectedRate, _ := time.ParseDuration("1.42s")
+				Expect(graphicalVisualizer.PrintDistributionChartArgsForCall(0)).To(Equal(expectedRate))
+			})
+
+			It("prints errors from the visualizer", func() {
+				graphicalVisualizer.PrintDistributionChartReturns(errors.New("can you visualize"))
+
+				closeChan := test_helpers.AsyncExecuteCommandWithArgs(visualizeCommand, []string{"--graphical"})
+
+				Eventually(closeChan).Should(BeClosed())
+				Expect(outputBuffer).To(test_helpers.Say("Error Visualization:can you visualize"))
+			})
+
 		})
 
 	})
