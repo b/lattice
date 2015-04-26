@@ -180,7 +180,6 @@ func (e *appExaminer) AppStatus(appName string) (AppInfo, error) {
 		indexMap[instance.Index] = index
 	}
 
-	// fmt.Println("len(containerMetrics)=", len(containerMetrics))
 	for _, metric := range containerMetrics {
 		metricIndex, ok := indexMap[int(metric.GetInstanceIndex())]
 		if !ok {
