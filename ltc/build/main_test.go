@@ -1,4 +1,4 @@
-package main_test
+package _build_test
 
 import (
 	"os/exec"
